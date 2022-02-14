@@ -1,5 +1,5 @@
 import { AbstractEntity } from "src/common/entities/AbstractEntity.entity";
-import { User } from "src/user/entities/User.entity";
+import { User } from "src/users/entities/User.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 
 @Entity("traceabilities")

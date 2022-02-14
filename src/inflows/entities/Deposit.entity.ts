@@ -1,6 +1,6 @@
 import { AbstractEntity } from "src/common/entities/AbstractEntity.entity";
 import { Outflow } from "src/outflows/entities/Outflow.entity";
-import { User } from "src/user/entities/User.entity";
+import { User } from "src/users/entities/User.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { InflowDeposit } from "./InflowDeposit.entity";
 

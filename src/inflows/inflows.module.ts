@@ -6,7 +6,7 @@ import { Inflow } from './entities/Intflow.entity';
 import { InflowDeposit } from './entities/InflowDeposit.entity';
 import { InflowType } from './entities/IntflowType.entity';
 import { Deposit } from './entities/Deposit.entity';
-import { User } from 'src/user/entities/User.entity';
+import { User } from 'src/users/entities/User.entity';
 
 @Module({
   imports:[

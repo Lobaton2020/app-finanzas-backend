@@ -8,9 +8,9 @@ import { InflowType } from 'src/inflows/entities/IntflowType.entity';
 import { Category } from 'src/outflows/entities/Category.entity';
 import { Outflow } from 'src/outflows/entities/Outflow.entity';
 import { OutflowType } from 'src/outflows/entities/OutflowType.entity';
-import { DocumentType } from 'src/user/entities/DocumentType.entity';
-import { Rol } from 'src/user/entities/Rol.entity';
-import { User } from 'src/user/entities/User.entity';
+import { DocumentType } from 'src/users/entities/DocumentType.entity';
+import { Rol } from 'src/users/entities/Rol.entity';
+import { User } from 'src/users/entities/User.entity';
 import { DATABASE_CONFG, DEV_KEY } from './constants.config';
 export default registerAs(DATABASE_CONFG, () => {
   return {

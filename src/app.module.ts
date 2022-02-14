@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import databaseConfig from './config/database.config';
@@ -11,10 +11,10 @@ import { InflowsModule } from './inflows/inflows.module';
 import { OutflowsModule } from './outflows/outflows.module';
 import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
-import { UserModule } from './user/user.module';
+import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DATABASE_CONFG } from './config/constants.config';
-import { User } from './user/entities/User.entity';
+import { User } from './users/entities/User.entity';
 import { Inflow } from './inflows/entities/Intflow.entity';
 
 const ConfigModuleProvider = ConfigModule.forRoot({
@@ -36,13 +36,13 @@ const TypeOrmModuleProvider = TypeOrmModule.forRootAsync({
     ConfigModuleProvider,
     TypeOrmModuleProvider,
     TypeOrmModule.forFeature([User,Inflow]),
-    UserModule,
+    UsersModule,
     InflowsModule,
     OutflowsModule,
     AuthModule,
     AdminModule,
     ReportsModule
   ],
-  controllers: [AppController]
+  controllers: [AppController],
 })
 export class AppModule {}

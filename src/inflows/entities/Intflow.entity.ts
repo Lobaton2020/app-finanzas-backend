@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "type
 import { InflowType } from "./IntflowType.entity";
 import { InflowDeposit } from "./InflowDeposit.entity";
 import { AbstractEntity } from "src/common/entities/AbstractEntity.entity";
-import { User } from "src/user/entities/User.entity";
+import { User } from "src/users/entities/User.entity";
 
 @Entity("inflows")
 export class Inflow extends AbstractEntity{

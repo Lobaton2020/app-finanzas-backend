@@ -9,3 +9,8 @@ export type IAppConfig = IEnvAppConfig & ConfigService;
 export default registerAs('app', () => ({
     httpPort: process.env.HTTP_PORT || 3000,
 }));
+
+export const defaultPagination = {
+    take: 100,
+    skip: 0,
+  };
