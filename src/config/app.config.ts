@@ -1,9 +1,16 @@
 import { registerAs, ConfigService } from '@nestjs/config'
+import { JWT_CONFIG } from './constants.config';
 
 interface IEnvAppConfig {
     HTTP_PORT: number
 };
 
+export interface IJwtConfig{
+    secretKey: string,
+    secretKeyRefresh: string,
+    expirationTime: string,
+    expirationTimeRefresh: string,
+}
 export type IAppConfig = IEnvAppConfig & ConfigService;
 
 export default registerAs('app', () => ({
@@ -13,4 +20,11 @@ export default registerAs('app', () => ({
 export const defaultPagination = {
     take: 100,
     skip: 0,
-  };
+};
+
+export const jwtConfig =  registerAs(JWT_CONFIG, () : IJwtConfig => ({
+    secretKey: process.env.JWT_SECRET_KEY || 'secretKey1',
+    secretKeyRefresh: process.env.JWT_SECRET_KEY_REFRESH || 'secretKeyRefresh',
+    expirationTime: process.env.JWT_EXPIRATION_TIME || 'exp1',
+    expirationTimeRefresh: process.env.JWT_EXPIRATION_TIME_REFRESH  || 'exp2',
+}));

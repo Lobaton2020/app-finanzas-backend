@@ -8,7 +8,6 @@ export class BaseNameDto {
 
 }
 
-
 export class BaseNameAndUserIdDto extends BaseNameDto{
     @IsNotEmpty()
     @IsNumber()

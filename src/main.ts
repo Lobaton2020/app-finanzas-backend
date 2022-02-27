@@ -2,10 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from "@nestjs/config";
 import { IAppConfig } from './config/app.config';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import {  ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder,SwaggerModule } from '@nestjs/swagger';
-import { DATABASE_CONFG, DEV_KEY, HTTP_PORT } from './config/constants.config';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { DEV_KEY, HTTP_PORT } from './config/constants.config';
+import { TimeInterceptor } from './common/interceptors/time.interceptor';
 
 const configForDevDatabase = ()=>{
   const data = require("./config/database.config").default();
@@ -16,9 +16,9 @@ async function bootstrap() {
   if(process.env.NODE_ENV === DEV_KEY) configForDevDatabase();
   const app = await NestFactory.create(AppModule);
   const config = app.get<IAppConfig>(ConfigService);
+  if(process.env.NODE_ENV === DEV_KEY) app.useGlobalInterceptors(new TimeInterceptor());
 
   app.setGlobalPrefix("api/v1");
-
   app.useGlobalPipes( new ValidationPipe({
     transform: true,
     whitelist: true,

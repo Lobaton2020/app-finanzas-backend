@@ -4,7 +4,7 @@ import { Rol } from "./Rol.entity";
 import { hash } from "bcryptjs"
 import { Deposit } from "src/inflows/entities/Deposit.entity";
 import { AbstractEntity } from "src/common/entities/AbstractEntity.entity";
-import { Traceability } from "src/admin/entities/Traceability.entity";
+import { Traceability } from "src/common/entities/Traceability.entity";
 import { OutflowType } from "src/outflows/entities/OutflowType.entity";
 import { InflowType } from "src/inflows/entities/IntflowType.entity";
 import { Inflow } from "src/inflows/entities/Intflow.entity";

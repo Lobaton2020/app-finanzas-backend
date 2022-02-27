@@ -8,11 +8,8 @@ export class PaginationPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
     const defaultValue = defaultPagination;
     try{
-      const take = Number(value?.take);
-      const skip = Number(value?.skip);
-    if(isNaN(take) || isNaN(skip)){
-        throw new ForbiddenException('The query param \'take\' or \'skip\' to paginate are invalid');
-      }
+      const take = Number(value?.take) || defaultValue.take;
+      const skip = Number(value?.skip) || defaultValue.skip;
       if(take > defaultValue.take){
         throw new ForbiddenException('Take value is too big');
       }

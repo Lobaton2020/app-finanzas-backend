@@ -17,4 +17,8 @@ export class RolsService {
     async findAll(page: Pagination): Promise<Rol[]> {
         return await this.rolsRepository.find({ ...page });
     }
+    async findOne(id:number): Promise<Rol> {
+        return await this.rolsRepository.findOne({ id });
+    }
+
 }

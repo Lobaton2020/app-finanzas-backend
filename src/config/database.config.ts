@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import path = require('path');
-import { Traceability } from 'src/admin/entities/Traceability.entity';
+import { Traceability } from 'src/common/entities/Traceability.entity';
 import { Deposit } from 'src/inflows/entities/Deposit.entity';
 import { InflowDeposit } from 'src/inflows/entities/InflowDeposit.entity';
 import { Inflow } from 'src/inflows/entities/Intflow.entity';
@@ -11,8 +11,8 @@ import { OutflowType } from 'src/outflows/entities/OutflowType.entity';
 import { DocumentType } from 'src/users/entities/DocumentType.entity';
 import { Rol } from 'src/users/entities/Rol.entity';
 import { User } from 'src/users/entities/User.entity';
-import { DATABASE_CONFG, DEV_KEY } from './constants.config';
-export default registerAs(DATABASE_CONFG, () => {
+import { DATABASE_CONFIG, DEV_KEY } from './constants.config';
+export default registerAs(DATABASE_CONFIG, () => {
   return {
     type: "mysql",
     host: process.env.DATABASE_HOST || "localhost",
