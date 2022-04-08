@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { InflowsService } from './inflows.service';
-import { CreateInflowDto } from './dto/create-inflow.dto';
-import { UpdateInflowDto } from './dto/update-inflow.dto';
+import { CreateInflowDto } from '../dto/create-inflow.dto';
+import { UpdateInflowDto } from '../dto/update-inflow.dto';
+import { InflowsService } from '../services/inflows.service';
 
 @Controller('inflows')
 export class InflowsController {

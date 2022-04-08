@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateInflowDto } from './dto/create-inflow.dto';
-import { UpdateInflowDto } from './dto/update-inflow.dto';
+import { CreateInflowDto } from '../dto/create-inflow.dto';
+import { UpdateInflowDto } from '../dto/update-inflow.dto';
 
 @Injectable()
 export class InflowsService {
