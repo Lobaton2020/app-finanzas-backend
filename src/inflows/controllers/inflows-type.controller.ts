@@ -22,6 +22,7 @@ export class InflowsTypeController {
     }
 
     @Get(":id")
+    @AccessAdminAndUser()
     findOne(@Req() req, @Param('id') id: number){
         return this.inflowsTypeService.findOne(req.user.userId, id);
     }

@@ -10,13 +10,15 @@ import { User } from 'src/users/entities/User.entity';
 import { InflowsTypeController } from './controllers/inflows-type.controller';
 import { InflowsTypeService } from './services/inflows-type.service';
 import { UsersModule } from 'src/users/users.module';
+import { DepositsController } from './controllers/deposits.controller';
+import { DepositsService } from './services/deposits.service';
 
 @Module({
   imports:[
     UsersModule,
     TypeOrmModule.forFeature([Inflow,InflowDeposit,InflowType, Deposit,User])
   ],
-  controllers: [InflowsController, InflowsTypeController],
-  providers: [InflowsTypeService,InflowsService]
+  controllers: [InflowsController, InflowsTypeController, DepositsController],
+  providers: [InflowsTypeService,InflowsService, DepositsService]
 })
 export class InflowsModule {}
