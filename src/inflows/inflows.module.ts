@@ -16,7 +16,7 @@ import { DepositsService } from './services/deposits.service';
 @Module({
   imports:[
     UsersModule,
-    TypeOrmModule.forFeature([Inflow,InflowDeposit,InflowType, Deposit,User])
+    TypeOrmModule.forFeature([Inflow,InflowDeposit,InflowType, Deposit,User]),
   ],
   controllers: [InflowsController, InflowsTypeController, DepositsController],
   providers: [InflowsTypeService,InflowsService, DepositsService]

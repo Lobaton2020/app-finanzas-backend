@@ -14,10 +14,9 @@ import { AdminModule } from './admin/admin.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DATABASE_CONFIG } from './config/constants.config';
-import { Traceability } from './common/entities/Traceability.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TraceabilityInterceptor } from './common/interceptors/traceability.interceptor';
-import { JwtModule } from '@nestjs/jwt';
+import { Traceability } from './common/entities/Traceability.entity';
 
 const ConfigModuleProvider = ConfigModule.forRoot({
   envFilePath: enviromentsEnv[process.env.NODE_ENV] || '.env',
@@ -49,8 +48,7 @@ const TypeOrmModuleProvider = TypeOrmModule.forRootAsync({
     OutflowsModule,
     AuthModule,
     AdminModule,
-    ReportsModule
-
+    ReportsModule,
   ],
   controllers: [AppController],
 })

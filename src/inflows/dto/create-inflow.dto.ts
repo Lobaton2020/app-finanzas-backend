@@ -1,6 +1,6 @@
 import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export interface InflowPorcent{
+export interface IInflowPorcent{
     porcent:number,
     depositId:number
 }
@@ -23,11 +23,6 @@ export class CreateInflowDto{
     setDate:Date;
 
     @IsNotEmpty()
-    @IsNumber()
-    userId:number;
-
-
-    @IsNotEmpty()
     @IsArray()
-    porcents:InflowPorcent[];
+    porcents:IInflowPorcent[];
 }

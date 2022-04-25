@@ -1,26 +1,144 @@
-import { Injectable } from '@nestjs/common';
-import { CreateInflowDto } from '../dto/create-inflow.dto';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Pagination } from 'src/common/interfaces/pagination.interface';
+import { UsersService } from 'src/users/services/users.service';
+import { Connection, Repository } from 'typeorm';
+import { CreateInflowDto, IInflowPorcent } from '../dto/create-inflow.dto';
 import { UpdateInflowDto } from '../dto/update-inflow.dto';
+import { Deposit } from '../entities/Deposit.entity';
+import { InflowDeposit } from '../entities/InflowDeposit.entity';
+import { Inflow } from '../entities/Intflow.entity';
+import { InflowType } from '../entities/IntflowType.entity';
 
 @Injectable()
 export class InflowsService {
-  create(createInflowDto: CreateInflowDto) {
-    return 'This action adds a new inflow';
+  private readonly logger: Logger = new Logger(InflowsService.name);
+  constructor(
+    @InjectRepository(Inflow) private readonly inflowsRepository: Repository<Inflow>,
+    @InjectRepository(InflowType) private readonly inflowsTypeRepository: Repository<InflowType>,
+    @InjectRepository(Deposit) private readonly depositRepository: Repository<Deposit>,
+    @InjectRepository(InflowDeposit) private readonly inflowDepositRepository: Repository<InflowDeposit>,
+    private  connection: Connection,
+    private readonly userService: UsersService
+) {
+
+}
+
+  async findAll(userId, page: Pagination) {
+    const opts = {
+      relations:["inflowtype","user","inflowdeposits"],
+      ...page,
+      where:{
+        user: userId
+      }
+    };
+    const inflow = await this.inflowsRepository.find(opts);
+    const inflows = await inflow.map((data)=>this.handleInflow(data));
+    return await Promise.all(inflows);
+  }
+  //Get the deposits where the bologs to the inflowDeposit, intermediate table
+  private async getDeposits(inflowdeposits){
+    const handleGetDeposits= async ({ id,...rest })=> {
+      const inflowDeposit = await this.inflowDepositRepository.findOne({
+        where: { id },
+        relations:["deposit"]
+      });
+      return {
+          deposit: await this.depositRepository.findOne(inflowDeposit.deposit.id) || {},
+          inflowdeposits: { ...rest }
+      };
+    }
+    return inflowdeposits.map(handleGetDeposits);
+  };
+  private async handleInflow ({ inflowdeposits,...rest }){
+    const inflowDepositsArrayPromise = await this.getDeposits(inflowdeposits);
+    const deposits = await Promise.all(inflowDepositsArrayPromise);
+    return {
+      ...rest,
+      deposits
+    };
   }
 
-  findAll() {
-    return `This action returns all inflows`;
+  async findOne(userId, id: number) { // ajustar
+    const opts = {
+      relations:["inflowtype","user","inflowdeposits"],
+      where:{
+        user: userId,
+        id
+      }
+    };
+    const inflow = await this.inflowsRepository.findOne(opts);
+    if(!inflow){
+        throw new NotFoundException("The inflow not exists")
+    }
+    return await this.handleInflow(inflow);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} inflow`;
+
+  async create(userId:number, inflowIn:CreateInflowDto){
+
+    const { description, inflowTypeId, total, setDate, porcents  } = inflowIn;
+    this.validateSumPercents(porcents)
+    const inflowType = await this.inflowsTypeRepository.findOne({ id: inflowTypeId });
+    if(!inflowType){
+        throw new BadRequestException("The inflowType not exists")
+    }
+    const user = await this.userService.findOne({ id: userId });
+    if(!user){
+        throw new BadRequestException("The user not exists")
+    }
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+    try{
+        const inflow = new Inflow();
+        inflow.inflowtype = inflowType;
+        inflow.description = description;
+        inflow.total = total
+        inflow.setDate = setDate;
+        inflow.user = user
+        const inflowSaved = await queryRunner.manager.save(inflow)
+        for(let porcent of porcents){
+            await queryRunner.manager.save(await this.prepareInflowDeposit(porcent,inflowSaved))
+        }
+        await queryRunner.commitTransaction();
+        this.logger.debug("Se realiza transaccion para nueva entrada de dinero")
+        return inflowIn;
+      }catch(error){
+        await queryRunner.rollbackTransaction();
+        if(error instanceof BadRequestException){
+          throw new BadRequestException(error.message)
+        }
+        this.logger.error("Fail to create inflow, general process", error)
+        throw new InternalServerErrorException("Failed on database process, to create Inflow")
+      }finally {
+        await queryRunner.release();
+      }
+  }
+  private async prepareInflowDeposit(porcent:IInflowPorcent,inflow:Inflow){
+      const deposit:Deposit = await this.depositRepository.findOne({ id: porcent.depositId })
+      if(!deposit){
+          throw new BadRequestException("The deposit not exists")
+      }
+
+      const inflowDeposit = new InflowDeposit()
+      inflowDeposit.porcentNumber = porcent.porcent
+      inflowDeposit.deposit = deposit
+      inflowDeposit.inflow = inflow
+      return inflowDeposit
+  }
+  private validateSumPercents(porcents:IInflowPorcent[]){
+    porcents.forEach(({ porcent, depositId }) =>{
+      if(!porcent || !depositId){
+          throw new BadRequestException("Please send in a correct way the porcent and the depositId")
+      }
+    })
+    const sumPorcents = porcents.map(({ porcent })=> porcent).reduce((prev,curr)=>  prev  + curr ,0);
+    if(sumPorcents !== 100){
+        throw new BadRequestException("The sum of the porcent must be equal to 100")
+    }
   }
 
-  update(id: number, updateInflowDto: UpdateInflowDto) {
-    return `This action updates a #${id} inflow`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} inflow`;
-  }
+  update(userId:number,inflowId:number,  inflowIn:UpdateInflowDto){}
 }
