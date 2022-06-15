@@ -1,8 +1,16 @@
-import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator";
 
 export interface IInflowPorcent{
+    depositId:number,
     porcent:number,
-    depositId:number
+}
+
+export class InflowPorcentCreateDto implements IInflowPorcent{
+    @IsNumber()
+    porcent:number;
+    @IsNumber()
+    depositId:number;
 }
 
 export class CreateInflowDto{
@@ -23,6 +31,8 @@ export class CreateInflowDto{
     setDate:Date;
 
     @IsNotEmpty()
+    @ValidateNested({ each: true })
     @IsArray()
+    @Type(()=>InflowPorcentCreateDto)
     porcents:IInflowPorcent[];
 }

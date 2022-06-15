@@ -40,11 +40,19 @@ export class TraceabilityInterceptor implements NestInterceptor {
     const requestId:string = uuid();
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
+    const urlParts = req.originalUrl.split("/");
     res.removeHeader("x-powered-by");
     try{
+      if(urlParts[urlParts.length - 1] == "tracking"){
+        this.logger.log(`${req.method} - ${req.originalUrl} Endpoint tracking doesn't saved`);
+        return next.handle();
+      }
       res.setHeader("request-id",requestId);
       await this.traceabilityRepository.save(this.buildBodyCreate(req, requestId))
-      return next.handle().pipe(tap( async (data)=> await this.traceabilityRepository.update({ requestId }, this.buildBodyUpdate(res,data))));
+      return next.handle().pipe(tap({
+        next: async (data)=> await this.traceabilityRepository.update({ requestId }, this.buildBodyUpdate(res,data)),
+        error: async (data)=> await this.traceabilityRepository.update({ requestId }, this.buildBodyUpdate(res,data.response))
+      }));
     }catch(e){
       this.logger.error("Failed to execute traceability",e)
       return next.handle();
