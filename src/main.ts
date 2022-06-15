@@ -13,8 +13,12 @@ const configForDevDatabase = ()=>{
 }
 
 async function bootstrap() {
-  if(process.env.NODE_ENV === DEV_KEY) configForDevDatabase();
-  const app = await NestFactory.create(AppModule);
+  let configApp = {};
+  if(process.env.NODE_ENV === DEV_KEY) {
+    configForDevDatabase()
+    configApp = { cors: true };
+  };
+  const app = await NestFactory.create(AppModule, configApp);
   const config = app.get<IAppConfig>(ConfigService);
   if(process.env.NODE_ENV === DEV_KEY) app.useGlobalInterceptors(new TimeInterceptor());
 

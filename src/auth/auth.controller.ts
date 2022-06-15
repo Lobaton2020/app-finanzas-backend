@@ -19,10 +19,10 @@ export class AuthController {
   refreshToken(@Body() data: RefreshTokenDto){
     return this.authService.getNewToken(data.refreshToken);
   }
-
   @Post('/signin')
   @UseGuards(AuthGuard('local'))
   signin(@Req() req:any){
     return this.authService.login(req.user);
   }
 }
+
