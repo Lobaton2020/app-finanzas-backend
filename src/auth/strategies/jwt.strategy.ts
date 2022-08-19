@@ -5,12 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { JWT_CONFIG } from 'src/config/constants.config';
 import { IJwtConfig } from 'src/config/app.config';
 
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly configService: ConfigService,
-  ) {
+  constructor(private readonly configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,

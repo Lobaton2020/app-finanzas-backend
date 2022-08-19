@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Pagination } from 'src/common/interfaces/pagination.interface';
 import { Repository } from 'typeorm';
 import { DocumentType } from '../entities/DocumentType.entity';
 
@@ -9,8 +10,8 @@ export class DocumentTypeService {
         @InjectRepository(DocumentType) private readonly documentTypeRepository: Repository<DocumentType>
     ){}
 
-    async finAll(){
-        return await this.documentTypeRepository.find();
+    async findAll(pagination: Pagination): Promise<DocumentType[]> {
+        return await this.documentTypeRepository.find({...pagination});
     }
 
     async findOne(id:number){

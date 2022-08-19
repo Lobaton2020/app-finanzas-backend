@@ -65,6 +65,10 @@ export class InflowsService {
     if(!inflowType){
         throw new BadRequestException(messagesError.INFLOW_TYPE_NOT_FOUND)
     }
+    /**
+     * It should validate if the user is active or not, Or simply verify the user flow to access here
+     * Ask to Daniel about how validate allS
+    */
     const user = await this.userService.findOne({ id: userId });
     if(!user){
         throw new BadRequestException(messagesError.USER_NOT_FOUND)

@@ -8,12 +8,13 @@ import { RolsService } from './services/rols.service';
 import { Rol } from './entities/Rol.entity';
 import { DocumentTypeService } from './services/document-type.service';
 import { DocumentType } from './entities/DocumentType.entity';
+import { DocumentTypeController } from './controllers/document-type.controller';
 
 @Module({
   imports:[
     TypeOrmModule.forFeature([User,Rol, DocumentType])
   ],
-  controllers: [UsersController, RolsController],
+  controllers: [UsersController, RolsController, DocumentTypeController],
   providers: [UsersService, RolsService, DocumentTypeService],
   exports: [UsersService]
 })
