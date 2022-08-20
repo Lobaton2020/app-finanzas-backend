@@ -13,12 +13,13 @@ import { UsersModule } from 'src/users/users.module';
 import { DepositsController } from './controllers/deposits.controller';
 import { DepositsService } from './services/deposits.service';
 
+
 @Module({
   imports:[
     UsersModule,
     TypeOrmModule.forFeature([Inflow,InflowDeposit,InflowType, Deposit,User]),
   ],
-  controllers: [InflowsController, InflowsTypeController, DepositsController],
+  controllers: [DepositsController, InflowsTypeController, InflowsController],
   providers: [InflowsTypeService,InflowsService, DepositsService]
 })
 export class InflowsModule {}

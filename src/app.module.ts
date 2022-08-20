@@ -7,7 +7,7 @@ import enviromentsEnv from './config/enviroments.config';
 import envValidate from './config/env.validate';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { InflowsModule } from './inflows/inflows.module';
+import {  InflowsModule } from './inflows/inflows.module';
 import { OutflowsModule } from './outflows/outflows.module';
 import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
@@ -40,11 +40,11 @@ const TypeOrmModuleProvider = TypeOrmModule.forRootAsync({
     }
   ],
   imports: [
+    InflowsModule,
     ConfigModuleProvider,
     TypeOrmModuleProvider,
     TypeOrmModule.forFeature([Traceability]),
     UsersModule,
-    InflowsModule,
     OutflowsModule,
     AuthModule,
     AdminModule,

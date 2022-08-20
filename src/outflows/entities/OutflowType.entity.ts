@@ -22,5 +22,5 @@ export class OutflowType extends AbstractEntity{
     @JoinColumn()
     @ManyToOne((_)=>User, (user)=>user.outflowtypes, { nullable:true})
     user:User;
-
+    
 }

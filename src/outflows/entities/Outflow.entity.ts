@@ -1,9 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 import { OutflowType } from "./OutflowType.entity";
 import { Category } from "./Category.entity";
 import { AbstractEntity } from "src/common/entities/AbstractEntity.entity";
 import { User } from "src/users/entities/User.entity";
 import { Deposit } from "src/inflows/entities/Deposit.entity";
+import { Tag } from "./Tag.entity";
 
 @Entity("outflows")
 export class Outflow extends AbstractEntity{
@@ -23,6 +24,11 @@ export class Outflow extends AbstractEntity{
     @JoinColumn()
     @ManyToOne((_) => Category, (category) => category.outflows, { nullable:true})
     category: Category;
+
+
+    @ManyToMany((_) => Tag, (tag) => tag.outflows, { nullable:true})
+    @JoinTable()
+    tags: Tag[];
 
     @JoinColumn()
     @ManyToOne((_) => User, (user) => user.outflows, { nullable:false})

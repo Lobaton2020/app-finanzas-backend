@@ -10,6 +10,7 @@ import { InflowType } from "src/inflows/entities/IntflowType.entity";
 import { Inflow } from "src/inflows/entities/Intflow.entity";
 import { Outflow } from "src/outflows/entities/Outflow.entity";
 import { Category } from "src/outflows/entities/Category.entity";
+import { Tag } from "src/outflows/entities/Tag.entity";
 
 @Entity("users")
 export class User extends AbstractEntity{
@@ -81,4 +82,7 @@ export class User extends AbstractEntity{
 
     @OneToMany((_)=>Category, (category)=>category.user)
     categories:Category[];
+
+    @OneToMany((_)=>Tag, (tag)=>tag.user)
+    tags:Tag[];
 }

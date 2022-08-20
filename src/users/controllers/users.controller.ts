@@ -8,8 +8,9 @@ import { PaginationPipe } from 'src/common/pipes/pagination.pipe';
 import UpdateUserStateDto from '../dto/update-user-status.dto';
 import { User } from '../entities/User.entity';
 import { UsersService } from '../services/users.service';
+import usersRouter from '../users.router';
 
-@Controller('users')
+@Controller(usersRouter.users.path)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
     constructor(
@@ -22,7 +23,7 @@ export class UsersController {
         return await this.usersService.findOne(id);
     }
 
-    // @AccessAdmin()
+    @AccessAdmin()
     @Get()
     async findAll(@Query(PaginationPipe) pagination: Pagination): Promise<User[]> {
         return await this.usersService.find(pagination);
@@ -33,9 +34,7 @@ export class UsersController {
         return await this.usersService.update(user);
     }
 
-
-    @AccessAdminAndUser()// test
-    // @AccessAdmin()
+    @AccessAdminAndUser()
     @Patch(':id')
     async changeStatus(@Param("id",ParseIntPipe) id, @Body() change: UpdateUserStateDto): Promise<User> {
         return await this.usersService.changeStatus(id, change.status);

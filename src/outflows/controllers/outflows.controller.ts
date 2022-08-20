@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { OutflowsService } from './outflows.service';
-import { CreateOutflowDto } from './dto/create-outflow.dto';
-import { UpdateOutflowDto } from './dto/update-outflow.dto';
+import { OutflowsService } from '../services/outflows.service';
+import { CreateOutflowDto } from '../dto/create-outflow.dto';
+import { UpdateOutflowDto } from '../dto/update-outflow.dto';
+import outflowsRouter from '../outflows.router';
 
-@Controller('outflows')
+@Controller(outflowsRouter.outflows.path)
 export class OutflowsController {
   constructor(private readonly outflowsService: OutflowsService) {}
 

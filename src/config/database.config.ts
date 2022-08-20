@@ -8,10 +8,12 @@ import { InflowType } from 'src/inflows/entities/IntflowType.entity';
 import { Category } from 'src/outflows/entities/Category.entity';
 import { Outflow } from 'src/outflows/entities/Outflow.entity';
 import { OutflowType } from 'src/outflows/entities/OutflowType.entity';
+import { Tag } from 'src/outflows/entities/Tag.entity';
 import { DocumentType } from 'src/users/entities/DocumentType.entity';
 import { Rol } from 'src/users/entities/Rol.entity';
 import { User } from 'src/users/entities/User.entity';
 import { DATABASE_CONFIG, DEV_KEY } from './constants.config';
+
 export default registerAs(DATABASE_CONFIG, () => {
   return {
     type: "mysql",
@@ -37,9 +39,8 @@ export default registerAs(DATABASE_CONFIG, () => {
       Outflow,
       OutflowType,
       Category,
-      Traceability
-    //  path.resolve(__dirname+'/../**/**/*.entity{.ts,.js}')
-      // './**/*.entity{.ts,.js}'
+      Traceability,
+      Tag
     ],
     migrationsRun: false,
     migrations: [

@@ -5,8 +5,9 @@ import { Public } from 'src/auth/public.decorator';
 import { Pagination } from 'src/common/interfaces/pagination.interface';
 import { PaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { DocumentTypeService } from '../services/document-type.service';
+import usersRouter from '../users.router';
 
-@Controller('documentTypes')
+@Controller(usersRouter.documentType.path)
 @UseGuards(JwtAuthGuard,RolesGuard)
 export class DocumentTypeController {
     constructor(

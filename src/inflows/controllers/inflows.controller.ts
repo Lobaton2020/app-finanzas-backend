@@ -1,14 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Req, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AccessAdminAndUser } from 'src/auth/decorators/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Public } from 'src/auth/public.decorator';
 import { Pagination } from 'src/common/interfaces/pagination.interface';
 import { PaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { CreateInflowDto } from '../dto/create-inflow.dto';
 import { UpdateInflowDto } from '../dto/update-inflow.dto';
+import inflowsRouter from '../inflows.router';
 import { InflowsService } from '../services/inflows.service';
 
-@Controller('inflows')
+@ApiBearerAuth()
+@Controller(inflowsRouter.inflows.path)
 @UseGuards(JwtAuthGuard,RolesGuard)
 export class InflowsController {
   constructor(private readonly inflowsService: InflowsService) {}

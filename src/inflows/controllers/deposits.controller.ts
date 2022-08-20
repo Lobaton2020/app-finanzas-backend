@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AccessAdminAndUser } from 'src/auth/decorators/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -6,14 +7,17 @@ import { Pagination } from 'src/common/interfaces/pagination.interface';
 import { PaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { CreateDepositDto } from '../dto/create-deposit.dto';
 import { UpdateDepositDto } from '../dto/update-deposit.dto';
+import inflowsRouter from '../inflows.router';
 import { DepositsService } from '../services/deposits.service';
 
-@Controller('deposits')
-@UseGuards(JwtAuthGuard,RolesGuard)
+@ApiBearerAuth()
+@Controller(inflowsRouter.deposits.path)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class DepositsController {
     constructor(
         private readonly depositService: DepositsService
     ){}
+
     @Get()
     @AccessAdminAndUser()
     findAll(@Req() req, @Query(PaginationPipe) pagination: Pagination){

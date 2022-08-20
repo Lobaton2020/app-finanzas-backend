@@ -11,11 +11,9 @@ import { DocumentType } from './entities/DocumentType.entity';
 import { DocumentTypeController } from './controllers/document-type.controller';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([User,Rol, DocumentType])
-  ],
-  controllers: [UsersController, RolsController, DocumentTypeController],
+  imports: [TypeOrmModule.forFeature([User, Rol, DocumentType])],
+  controllers: [RolsController, DocumentTypeController, UsersController],
   providers: [UsersService, RolsService, DocumentTypeService],
-  exports: [UsersService]
+  exports: [UsersService],
 })
 export class UsersModule {}

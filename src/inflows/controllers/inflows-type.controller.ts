@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AccessAdminAndUser } from 'src/auth/decorators/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -6,9 +7,11 @@ import { Pagination } from 'src/common/interfaces/pagination.interface';
 import { PaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { CreateInflowTypeDto } from '../dto/create-inflow-type.dto';
 import { UpadateInflowTypeDto } from '../dto/update-inflow-type.dto';
+import inflowsRouter from '../inflows.router';
 import { InflowsTypeService } from '../services/inflows-type.service';
 
-@Controller('inflowsTypes')
+@ApiBearerAuth()
+@Controller(inflowsRouter.inflowType.path)
 @UseGuards(JwtAuthGuard,RolesGuard)
 export class InflowsTypeController {
     constructor(
