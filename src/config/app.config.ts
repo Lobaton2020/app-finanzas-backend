@@ -18,8 +18,8 @@ export default registerAs('app', () => ({
 }));
 
 export const defaultPagination = {
-    take: 100,
-    skip: 0,
+    limit: 100,
+    page: 1,
 };
 
 export const jwtConfig =  registerAs(JWT_CONFIG, () : IJwtConfig => ({

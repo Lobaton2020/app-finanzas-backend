@@ -12,14 +12,26 @@ import { InflowsTypeService } from './services/inflows-type.service';
 import { UsersModule } from 'src/users/users.module';
 import { DepositsController } from './controllers/deposits.controller';
 import { DepositsService } from './services/deposits.service';
+import { PaginationService } from 'src/common/services/pagination.service';
 
 
 @Module({
-  imports:[
+  imports: [
     UsersModule,
-    TypeOrmModule.forFeature([Inflow,InflowDeposit,InflowType, Deposit,User]),
+    TypeOrmModule.forFeature([
+      Inflow,
+      InflowDeposit,
+      InflowType,
+      Deposit,
+      User,
+    ]),
   ],
   controllers: [DepositsController, InflowsTypeController, InflowsController],
-  providers: [InflowsTypeService,InflowsService, DepositsService]
+  providers: [
+    InflowsTypeService,
+    InflowsService,
+    DepositsService,
+    PaginationService,
+  ],
 })
 export class InflowsModule {}
