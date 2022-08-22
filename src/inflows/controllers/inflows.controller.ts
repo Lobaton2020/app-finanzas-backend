@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Req, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { AccessAdminAndUser } from 'src/auth/decorators/role.decorator';
+import { AccessAdminOrUser } from 'src/auth/decorators/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Public } from 'src/auth/public.decorator';
@@ -18,25 +18,25 @@ export class InflowsController {
   constructor(private readonly inflowsService: InflowsService) {}
 
   @Get()
-  @AccessAdminAndUser()
+  @AccessAdminOrUser()
   findAll(@Req() req, @Query(PaginationPipe) pagination: IPagination) {
     return this.inflowsService.findAll(req.user.userId, pagination);
   }
 
   @Get(':id')
-  @AccessAdminAndUser()
+  @AccessAdminOrUser()
   findOne(@Req() req, @Param('id') id: number) {
     return this.inflowsService.findOne(req.user.userId, id);
   }
 
   @Post()
-  @AccessAdminAndUser()
+  @AccessAdminOrUser()
   create(@Req() req, @Body() createInflowDto: CreateInflowDto) {
     return this.inflowsService.create(req.user.userId, createInflowDto);
   }
 
   @Put(':id')
-  @AccessAdminAndUser()
+  @AccessAdminOrUser()
   update(
     @Req() req,
     @Param('id') id: number,

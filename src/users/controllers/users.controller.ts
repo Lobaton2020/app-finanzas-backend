@@ -1,6 +1,9 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Patch, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { AccessAdmin, AccessAdminAndUser } from 'src/auth/decorators/role.decorator';
+import {
+  AccessAdmin,
+  AccessAdminOrUser,
+} from 'src/auth/decorators/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { IPagination } from 'src/common/interfaces/pagination.interface';
@@ -15,7 +18,7 @@ import usersRouter from '../users.router';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @AccessAdminAndUser()
+  @AccessAdminOrUser()
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return this.usersService.findOne(id);
@@ -23,9 +26,7 @@ export class UsersController {
 
   @AccessAdmin()
   @Get()
-  findAll(
-    @Query(PaginationPipe) pagination: IPagination,
-  ) {
+  findAll(@Query(PaginationPipe) pagination: IPagination) {
     return this.usersService.find(pagination);
   }
 
@@ -34,7 +35,7 @@ export class UsersController {
     return this.usersService.update(user);
   }
 
-  @AccessAdminAndUser()
+  @AccessAdminOrUser()
   @Patch(':id')
   changeStatus(
     @Param('id', ParseIntPipe) id,
@@ -43,7 +44,7 @@ export class UsersController {
     return this.usersService.changeStatus(id, change.status);
   }
 
-  @AccessAdminAndUser()
+  @AccessAdminOrUser()
   @Patch()
   @ApiOperation({
     summary:
