@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import {  Injectable } from '@nestjs/common';
+import {  Injectable, BadRequestException } from '@nestjs/common';
 import { IPagination } from 'src/common/interfaces/pagination.interface';
 import { CrateRolDto } from '../dto/crate-rol.dto';
 import { Rol } from '../entities/Rol.entity';
@@ -15,6 +15,10 @@ export class RolsService {
   ) {}
 
   async create(createRolDto: CrateRolDto): Promise<Rol> {
+    const alreadyByName = await this.rolsRepository.findOne({ where: { name: createRolDto.name} })
+    if(alreadyByName){
+      throw new BadRequestException('The name already exists')
+    }
     return await this.rolsRepository.save(createRolDto);
   }
   async findAll(pagination: IPagination): Promise<Pagination<Rol, IPaginationMeta>> {

@@ -75,7 +75,7 @@ export class InflowsService {
     const { description, inflowTypeId, total, setDate, porcents } = inflowIn;
     this.validateSumPercents(porcents);
     const inflowType = await this.inflowsTypeRepository.findOne({
-      id: inflowTypeId,
+      where: {user: userId, id: inflowTypeId}
     });
     if (!inflowType) {
       throw new BadRequestException(messagesError.INFLOW_TYPE_NOT_FOUND);

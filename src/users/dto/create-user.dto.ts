@@ -1,4 +1,5 @@
 import { IsDateString, IsEmail, IsInt,IsNotEmpty, IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength } from "class-validator";
+import { IsPassword } from '../../common/decorators/is-password.decorator'
 
 export class CreateUserDto {
 
@@ -26,15 +27,8 @@ export class CreateUserDto {
     @IsEmail()
     email:string;
 
-    /**
-     @Matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{6,64}$/g, {
-       message:
-       'Password must be between 6 and 64 characters long with 1 special character and capital character each',
-      })
-    */
     @IsNotEmpty()
-    @IsString()
-    @MinLength(6)
+    @IsPassword()
     password:string;
 
     @IsOptional()

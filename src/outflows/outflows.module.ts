@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module,forwardRef } from '@nestjs/common';
 import { OutflowsController } from './controllers/outflows.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Deposit } from 'src/inflows/entities/Deposit.entity';
@@ -15,9 +15,13 @@ import { OutflowTypeService } from './services/outflow-type.service';
 import { CategoriesService } from './services/categories.service';
 import { PaginationService } from 'src/common/services/pagination.service';
 import { UsersModule } from 'src/users/users.module';
+import { InflowsModule } from 'src/inflows/inflows.module';
+import { ReportsModule } from 'src/reports/reports.module';
 
 @Module({
   imports: [
+    forwardRef(()=>ReportsModule),
+    InflowsModule,
     UsersModule,
     TypeOrmModule.forFeature([Outflow, OutflowType, Category, Deposit, Tag]),
   ],

@@ -23,7 +23,7 @@ export class OutflowTypeService {
     });
 
     if(!record){
-      throw new NotFoundException("The record by id: "+outflowTypeId+" hasn't found")
+      throw new NotFoundException("The outflow type by id: "+outflowTypeId+" hasn't found")
     }
     return record
   }

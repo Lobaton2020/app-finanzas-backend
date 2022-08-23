@@ -33,5 +33,6 @@ import { PaginationService } from 'src/common/services/pagination.service';
     DepositsService,
     PaginationService,
   ],
+  exports: [DepositsService]
 })
 export class InflowsModule {}

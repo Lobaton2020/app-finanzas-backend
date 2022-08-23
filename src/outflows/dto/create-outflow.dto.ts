@@ -1,9 +1,7 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsPositive, IsString, ValidateNested } from "class-validator";
 
 export class CreateOutflowDto{
-    @IsNotEmpty()
-    @IsNumber()
-    userId:number;
 
     @IsNotEmpty()
     @IsNumber()
@@ -16,6 +14,9 @@ export class CreateOutflowDto{
     @IsNotEmpty()
     @IsNumber()
     depositId:number;
+
+    @IsNumber({},{each: true})
+    tagsId:number[];
 
     @IsNotEmpty()
     @IsNumber()

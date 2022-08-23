@@ -1,83 +1,77 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, Logger, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { IPagination } from 'src/common/interfaces/pagination.interface';
+import { PaginationService } from 'src/common/services/pagination.service';
+import { DepositsService } from 'src/inflows/services/deposits.service';
+import { ReportsService } from 'src/reports/services/reports.service';
+import { UsersService } from 'src/users/services/users.service';
+import { Repository } from 'typeorm';
 import { CreateOutflowDto } from '../dto/create-outflow.dto';
 import { UpdateOutflowDto } from '../dto/update-outflow.dto';
+import { Outflow } from '../entities/Outflow.entity';
+import { IReportService } from '../interfaces/report.interface';
+import { CategoriesService } from './categories.service';
+import { OutflowTypeService } from './outflow-type.service';
+import { TagsService } from './tags.service';
 
 @Injectable()
 export class OutflowsService {
-
-
-//   async find(pag:IPagination,userId:number){
-//     this.logger.info("Se consultan datos desde el repositorio de outflows")
-//     const opts = {
-//         ...pag,
-//         relations:["category","user","deposit","outflowtype"],
-//         where:{ user:userId }
-//     };
-//     return await this.Outflow.find(opts);
-// }
-
-// async create(outflow:OutflowCreateDto){
-
-//     const { userId, outflowTypeId,categoryId, depositId } = outflow;
-//     const user = await this.User.findOne(userId);
-//     if(!user){
-//         throw new ValidateException(Code.BAD_REQUEST,"The user not exist")
-//     }
-//     const outflowType = await this.OutflowType.findOne(outflowTypeId)
-//     if(!outflowType){
-//         throw new ValidateException(Code.BAD_REQUEST,"The ouflowType not exist")
-//     }
-
-//     const category = await this.Category.findOne(categoryId);
-//     if(!category){
-//         throw new ValidateException(Code.BAD_REQUEST,"The category not exist")
-//     }
-
-//     const deposit = await this.Deposit.findOne(depositId);
-//     if(!deposit){
-//         throw new ValidateException(Code.BAD_REQUEST,"The deposit not exist")
-//     }
-//     if(!await this.isAmountDisponible(depositId, userId, outflow.amount)){
-//         throw new ValidateException(Code.BAD_REQUEST,"You don't have sufficient money in this deposit")
-//     }
-
-//     try{
-//         const outflowSave = this.Outflow.create(outflow)
-//         outflowSave.user = user
-//         outflowSave.outflowtype = outflowType
-//         outflowSave.category = category
-//         outflowSave.deposit = deposit
-//         this.logger.info("Se crear registro repositorio de outflow")
-//         return await this.Outflow.save(outflowSave);
-
-//     }catch(error){
-//         this.logger.error(error)
-//         throw new DatabaseException(Code.ERROR_INTERNAL,"Failed in database process")
-//     }
-// }
-// private async isAmountDisponible(depositId:number,userId:number,amount:number):Promise<boolean>{
-//     const { total:egressTotal } = (await this.reportRepository.getAllMoneyEgressByOneDeposit(depositId,userId))[0]
-//     const { total:ingressTotal }  = (await this.reportRepository.getAllMoneyIngressByOneDeposit(depositId,userId))[0]
-//     return (ingressTotal - egressTotal) > amount;
-// }
-
-  create(createOutflowDto: CreateOutflowDto) {
-    return 'This action adds a new outflow';
+  private readonly logger: Logger = new Logger(OutflowsService.name);
+  constructor(
+    @InjectRepository(Outflow) private readonly outflowsRepository: Repository<Outflow>,
+    private readonly userService: UsersService,
+    private readonly outflowTypeService: OutflowTypeService,
+    private readonly categoryService: CategoriesService,
+    private readonly depositService: DepositsService,
+    private readonly paginationService: PaginationService,
+    private readonly tagService: TagsService,
+    @Inject(ReportsService.name)
+    private readonly reportsService: IReportService
+  ) {}
+  findAll(userId: number, pagination: IPagination) {
+    return this.paginationService.paginate(
+      this.outflowsRepository,
+      pagination,
+      { where: { user: userId } },
+    );
   }
 
-  findAll() {
-    return `This action returns all outflows`;
+
+async create(userId: number, createOutflowDto: CreateOutflowDto){
+
+    const {outflowTypeId, categoryId, depositId, tagsId } = createOutflowDto;
+
+    const outflowType = await this.outflowTypeService.findOne(userId, outflowTypeId)
+    const category = await this.categoryService.findOne(userId, categoryId);
+    const deposit = await this.depositService.findOne(userId, depositId);
+    const tags = []
+    for(let tagId of tagsId){
+        tags.push(await this.tagService.findOne(userId, tagId))
+    }
+
+    if(!await this.reportsService.isQuantityAvailable(userId, depositId, createOutflowDto.amount)){
+        throw new BadRequestException("You don't have enought money in this deposit.")
+    }
+
+    try{
+        const outflowSave = this.outflowsRepository.create(createOutflowDto)
+        outflowSave.user = await this.userService.findOne(userId);
+        outflowSave.outflowtype = outflowType
+        outflowSave.category = category
+        outflowSave.deposit = deposit
+        outflowSave.tags = tags
+        return await this.outflowsRepository.save(outflowSave);
+    }catch(error){
+        this.logger.error(error)
+        throw new InternalServerErrorException("Transaction failed")
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} outflow`;
+  update(userId: any, id: number, updateOutflowDto: UpdateOutflowDto) {
+    throw new Error('Method not implemented.');
+  }
+  findOne(userId: any, id: number) {
+    throw new Error('Method not implemented.');
   }
 
-  update(id: number, updateOutflowDto: UpdateOutflowDto) {
-    return `This action updates a #${id} outflow`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} outflow`;
-  }
 }

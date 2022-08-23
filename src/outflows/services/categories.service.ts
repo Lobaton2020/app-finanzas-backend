@@ -29,16 +29,17 @@ export class CategoriesService {
     return this.paginationService.paginate(
       this.categoryRepository,
       pagination,
-      { where: { user: userId } },
+      { where: { user: userId }, relations:['outflowtype'] },
     );
   }
 
   async findOne(userId: number, categoryId: number) {
     const record = await this.categoryRepository.findOne({
       where: { user: userId, id: categoryId },
+      relations:['outflowtype']
     });
     if(!record){
-      throw new NotFoundException("The record by id: "+categoryId+" hasn't found")
+      throw new NotFoundException("The category by id: "+categoryId+" hasn't found")
     }
     return record
   }
