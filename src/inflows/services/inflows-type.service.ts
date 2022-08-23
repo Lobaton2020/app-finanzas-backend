@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException,BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPagination } from 'src/common/interfaces/pagination.interface';
 import { PaginationService } from 'src/common/services/pagination.service';
@@ -40,7 +40,7 @@ export class InflowsTypeService {
       where: { user: userId, name: createInflowsTypeDto.name },
     });
     if (alreadyByName) {
-      throw new NotFoundException(`InflowType name already exists`);
+      throw new BadRequestException(`InflowType name already exists`);
     }
     const inflowType = this.inflowsTypeRepository.create(createInflowsTypeDto);
     inflowType.user = await this.userService.findOne(userId);
@@ -56,6 +56,6 @@ export class InflowsTypeService {
   ) {
     const inflowType = await this.findOne(userId, id);
     inflowType.name = updateInflowTypeDto.name;
-    return await this.inflowsTypeRepository.save(inflowType);
+    return this.inflowsTypeRepository.save(inflowType);
   }
 }

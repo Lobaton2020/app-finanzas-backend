@@ -3,7 +3,7 @@ export default {
         path: 'inflows/deposits'
     },
     inflowType: {
-        path: 'inflows/inflowsTypes'
+        path: 'inflows/types'
     },
     inflows:{
         path: 'inflows',

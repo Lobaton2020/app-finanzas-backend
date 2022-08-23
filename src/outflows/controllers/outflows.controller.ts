@@ -1,10 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { OutflowsService } from '../services/outflows.service';
 import { CreateOutflowDto } from '../dto/create-outflow.dto';
 import { UpdateOutflowDto } from '../dto/update-outflow.dto';
 import outflowsRouter from '../outflows.router';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller(outflowsRouter.outflows.path)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class OutflowsController {
   constructor(private readonly outflowsService: OutflowsService) {}
 

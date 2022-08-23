@@ -6,7 +6,7 @@ export default {
         path: 'outflows/categories'
     },
     outflowType: {
-        path: 'outflows/outflowsTypes'
+        path: 'outflows/types'
     },
     outflows:{
         path: 'outflows',

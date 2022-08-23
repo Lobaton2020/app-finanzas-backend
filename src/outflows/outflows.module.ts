@@ -13,12 +13,26 @@ import { TagsService } from './services/tags.service';
 import { OutflowsService } from './services/outflows.service';
 import { OutflowTypeService } from './services/outflow-type.service';
 import { CategoriesService } from './services/categories.service';
+import { PaginationService } from 'src/common/services/pagination.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
     TypeOrmModule.forFeature([Outflow, OutflowType, Category, Deposit, Tag]),
   ],
-  controllers: [OutflowsTypeController, TagsController, CategoriesController, OutflowsController],
-  providers: [OutflowsService, TagsService, OutflowTypeService, CategoriesService],
+  controllers: [
+    OutflowsTypeController,
+    TagsController,
+    CategoriesController,
+    OutflowsController,
+  ],
+  providers: [
+    OutflowsService,
+    TagsService,
+    CategoriesService,
+    OutflowTypeService,
+    PaginationService,
+  ],
 })
 export class OutflowsModule {}
