@@ -2,41 +2,36 @@ import { IsDateString, IsEmail, IsInt,IsNotEmpty, IsOptional, IsString, Matches,
 import { IsPassword } from '../../common/decorators/is-password.decorator'
 
 export class CreateUserDto {
+  @IsOptional()
+  @IsInt()
+  documentTypeId: string;
 
-    @IsNotEmpty()
-    @IsInt()
-    rolId:string;
+  @IsOptional()
+  @Min(10000)
+  @Max(1000000000000000)
+  @IsInt()
+  documentNumber: string;
 
-    @IsNotEmpty()
-    @IsInt()
-    documentTypeId:string;
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(5)
+  completeName: string;
 
-    @IsNotEmpty()
-    @Min(10000)
-    @Max(1000000000000000)
-    @IsInt()
-    documentNumber:string;
+  @IsNotEmpty()
+  @IsString()
+  @IsEmail()
+  email: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @MinLength(5)
-    completeName:string;
+  @IsNotEmpty()
+  @IsPassword()
+  password: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @IsEmail()
-    email:string;
+  @IsOptional()
+  @IsString()
+  image: string;
 
-    @IsNotEmpty()
-    @IsPassword()
-    password:string;
-
-    @IsOptional()
-    @IsString()
-    image:string;
-
-    @IsDateString()
-    @IsNotEmpty()
-    bornDate:Date;
-
+  @IsOptional()
+  @IsDateString()
+  @IsNotEmpty()
+  bornDate: Date;
 }

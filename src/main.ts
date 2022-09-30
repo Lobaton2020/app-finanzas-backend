@@ -21,7 +21,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, configApp);
   const config = app.get<IAppConfig>(ConfigService);
   if(process.env.NODE_ENV === DEV_KEY) app.useGlobalInterceptors(new TimeInterceptor());
-
+  app.enableCors();
   app.setGlobalPrefix("api/v1");
   app.useGlobalPipes( new ValidationPipe({
     transform: true,

@@ -12,77 +12,80 @@ import { Outflow } from "src/outflows/entities/Outflow.entity";
 import { Category } from "src/outflows/entities/Category.entity";
 import { Tag } from "src/outflows/entities/Tag.entity";
 
-@Entity("users")
-export class User extends AbstractEntity{
+@Entity('users')
+export class User extends AbstractEntity {
+  @Column({ unique: true, nullable: true })
+  documentNumber: string;
 
-    @Column({ unique:true })
-    documentNumber:string;
+  @Column()
+  completeName: string;
 
-    @Column()
-    completeName:string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column({ unique:true })
-    email:string;
+  @Column({ type: 'varchar', select: false })
+  password: string;
 
-    @Column({ type: "varchar", select:false})
-    password:string;
+  @Column({ type: 'varchar', nullable: true })
+  image: string;
 
-    @Column({ type: "varchar", nullable:true})
-    image:string;
+  @Column({ type: 'boolean', default: true })
+  status: boolean;
 
-    @Column({ type: "boolean",default:true})
-    status:boolean;
+  @Column({ type: 'timestamp', nullable: true })
+  bornDate: Date;
 
-    @Column({ type: "timestamp"})
-    bornDate:Date;
+  @Column({ type: 'varchar', nullable: true, select: false })
+  emailVerifyDate: string;
 
+  @Column({ type: 'varchar', nullable: true, select: false })
+  recoveryPasswordToken: string;
 
-    @Column({ type: "varchar", nullable:true, select:false})
-    emailVerifyDate:string;
+  @Column({ type: 'varchar', nullable: true, select: false })
+  rememberToken: string;
 
-    @Column({ type: "varchar", nullable:true, select:false})
-    recoveryPasswordToken:string;
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    if (!this.password) return;
+    this.password = await hash(this.password, 10);
+  }
 
+  @JoinColumn()
+  @ManyToOne((_) => Rol, (rol) => rol.users, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  rol: Rol;
 
-    @Column({ type: "varchar", nullable:true, select:false})
-    rememberToken:string;
+  @JoinColumn()
+  @ManyToOne((_) => DocumentType, (documentType) => documentType.users, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  documentType: DocumentType;
 
-    @BeforeInsert()
-    @BeforeUpdate()
-    async hashPassword() {
-      if (!this.password) return;
-      this.password = await hash(this.password, 10);
-    }
+  @OneToMany((_) => Traceability, (traceabily) => traceabily.user)
+  traceabilities: Traceability[];
 
-    @JoinColumn()
-    @ManyToOne((_)=>Rol,(rol)=>rol.users,{ nullable:false,onDelete:"CASCADE" })
-    rol:Rol;
+  @OneToMany((_) => Deposit, (deposit) => deposit.user)
+  deposits: Deposit[];
 
-    @JoinColumn()
-    @ManyToOne((_)=>DocumentType, (documentType)=>documentType.users,{ nullable:false,onDelete:"CASCADE" })
-    documentType:DocumentType;
+  @OneToMany((_) => OutflowType, (outflowtype) => outflowtype.user)
+  outflowtypes: OutflowType[];
 
-    @OneToMany((_)=>Traceability, (traceabily)=>traceabily.user)
-    traceabilities:Traceability[];
+  @OneToMany((_) => InflowType, (inflowtype) => inflowtype.user)
+  inflowtypes: InflowType[];
 
-    @OneToMany((_)=>Deposit, (deposit)=>deposit.user)
-    deposits:Deposit[];
+  @OneToMany((_) => Inflow, (inflow) => inflow.user)
+  inflows: Inflow;
 
-    @OneToMany((_)=>OutflowType, (outflowtype)=>outflowtype.user)
-    outflowtypes:OutflowType[];
+  @OneToMany((_) => Outflow, (outflows) => outflows.user)
+  outflows: Outflow[];
 
-    @OneToMany((_)=>InflowType, (inflowtype)=>inflowtype.user)
-    inflowtypes:InflowType[];
+  @OneToMany((_) => Category, (category) => category.user)
+  categories: Category[];
 
-    @OneToMany((_)=>Inflow, (inflow)=>inflow.user)
-    inflows:Inflow;
-
-    @OneToMany((_)=>Outflow, (outflows)=>outflows.user)
-    outflows:Outflow[];
-
-    @OneToMany((_)=>Category, (category)=>category.user)
-    categories:Category[];
-
-    @OneToMany((_)=>Tag, (tag)=>tag.user)
-    tags:Tag[];
+  @OneToMany((_) => Tag, (tag) => tag.user)
+  tags: Tag[];
 }

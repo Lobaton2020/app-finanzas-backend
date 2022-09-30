@@ -8,6 +8,7 @@ import { DocumentTypeService } from './document-type.service';
 import { RolsService } from './rols.service';
 import { Pagination, IPaginationMeta } from 'nestjs-typeorm-paginate';
 import { PaginationService } from 'src/common/services/pagination.service';
+import { Role } from 'src/auth/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +16,7 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly rolService: RolsService,
     private readonly documentTypeService: DocumentTypeService,
-    private readonly paginationService: PaginationService
+    private readonly paginationService: PaginationService,
   ) {}
   async findOneByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne(
@@ -51,7 +52,7 @@ export class UsersService {
   }
 
   async create(user: CreateUserDto): Promise<User> {
-    const rol = await this.rolService.findOne(+user.rolId);
+    const rol = await this.rolService.findOneByName(Role.USER); // by default the rol is USER
     if (!rol) throw new BadRequestException('Rol not found');
     const documentType = await this.documentTypeService.findOne(
       +user.documentTypeId,

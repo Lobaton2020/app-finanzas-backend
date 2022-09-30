@@ -15,13 +15,17 @@ export class RolsService {
   ) {}
 
   async create(createRolDto: CrateRolDto): Promise<Rol> {
-    const alreadyByName = await this.rolsRepository.findOne({ where: { name: createRolDto.name} })
-    if(alreadyByName){
-      throw new BadRequestException('The name already exists')
+    const alreadyByName = await this.rolsRepository.findOne({
+      where: { name: createRolDto.name },
+    });
+    if (alreadyByName) {
+      throw new BadRequestException('The name already exists');
     }
     return await this.rolsRepository.save(createRolDto);
   }
-  async findAll(pagination: IPagination): Promise<Pagination<Rol, IPaginationMeta>> {
+  async findAll(
+    pagination: IPagination,
+  ): Promise<Pagination<Rol, IPaginationMeta>> {
     return this.paginationService.paginate<Rol>(
       this.rolsRepository,
       pagination,
@@ -29,5 +33,8 @@ export class RolsService {
   }
   async findOne(id: number): Promise<Rol> {
     return await this.rolsRepository.findOne({ id });
+  }
+  async findOneByName(name: string) {
+    return await this.rolsRepository.findOne({ name });
   }
 }
