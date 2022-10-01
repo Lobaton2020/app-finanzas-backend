@@ -54,17 +54,6 @@ export class UsersService {
   async create(user: CreateUserDto): Promise<User> {
     const rol = await this.rolService.findOneByName(Role.USER); // by default the rol is USER
     if (!rol) throw new BadRequestException('Rol not found');
-    const documentType = await this.documentTypeService.findOne(
-      +user.documentTypeId,
-    );
-    if (!documentType) throw new BadRequestException('Document type not found');
-    const alreadyExistByDocument = await this.userRepository.findOne({
-      documentNumber: user.documentNumber,
-    });
-    if (alreadyExistByDocument)
-      throw new BadRequestException(
-        'Document already exist, please try with other documentNumber',
-      );
     const alreadyExistByEmail = await this.userRepository.findOne({
       email: user.email,
     });
@@ -74,7 +63,6 @@ export class UsersService {
       );
     const newUser = await this.userRepository.create(user);
     newUser.rol = rol;
-    newUser.documentType = documentType;
     return await this.userRepository.save(newUser);
   }
   async changeStatus(id: number, status: boolean): Promise<User> {
