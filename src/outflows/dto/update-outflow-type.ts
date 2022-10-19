@@ -1,4 +1,4 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { CreateOutflowTypeDto } from "./create-outflow-type.dto";
+import { BaseStatusDto } from "src/common/dtos/BaseNameDto";
 
-export class UpdateOutflowTypeDto extends PartialType(CreateOutflowTypeDto){}
+export class UpdateOutflowTypeDto extends PartialType(BaseStatusDto) { }

@@ -56,6 +56,7 @@ export class InflowsTypeService {
   ) {
     const inflowType = await this.findOne(userId, id);
     inflowType.name = updateInflowTypeDto.name;
+    inflowType.status = updateInflowTypeDto.status;
     return this.inflowsTypeRepository.save(inflowType);
   }
 }

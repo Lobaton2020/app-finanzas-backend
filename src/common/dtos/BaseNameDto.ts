@@ -1,15 +1,23 @@
-import { IsNotEmpty,IsNumber,IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class BaseNameDto {
-
-    @IsNotEmpty()
-    @IsString()
-    name:string;
-
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 }
 
-export class BaseNameAndUserIdDto extends BaseNameDto{
-    @IsNotEmpty()
-    @IsNumber()
-    userId:number;
+
+export class BaseStatusDto extends BaseNameDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsBoolean()
+  status: boolean;
+}
+export class BaseNameAndUserIdDto extends BaseNameDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number;
 }

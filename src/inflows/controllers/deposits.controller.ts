@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessAdminOrUser } from 'src/auth/decorators/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -11,6 +11,7 @@ import inflowsRouter from '../inflows.router';
 import { DepositsService } from '../services/deposits.service';
 
 @ApiBearerAuth()
+@ApiTags('inflows')
 @Controller(inflowsRouter.deposits.path)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class DepositsController {

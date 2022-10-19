@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Put, Req, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AccessAdminOrUser } from 'src/auth/decorators/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -11,6 +11,7 @@ import { UpdateInflowDto } from '../dto/update-inflow.dto';
 import inflowsRouter from '../inflows.router';
 import { InflowsService } from '../services/inflows.service';
 
+@ApiTags('inflows')
 @ApiBearerAuth()
 @Controller(inflowsRouter.inflows.path)
 @UseGuards(JwtAuthGuard, RolesGuard)
