@@ -18,7 +18,7 @@ export default registerAs('app', () => ({
 }));
 
 export const defaultPagination = {
-    limit: 4,
+    limit: 100,
     page: 1,
 };
 
